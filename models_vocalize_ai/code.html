@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Model Selection | Vocalize AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --accent-glow: rgba(194, 193, 255, 0.15);
+        }
+        body {
+            background-color: #11131c;
+            color: #e1e1ef;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(194, 193, 255, 0.3);
+            box-shadow: 0 0 30px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+        .active-model-card {
+            background: rgba(88, 86, 214, 0.1);
+            border-color: #c2c1ff;
+            box-shadow: 0 0 30px rgba(88, 86, 214, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanning-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #c2c1ff, transparent);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(400px); opacity: 0; }
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3631b4",
+                        "on-secondary-fixed": "#001a41",
+                        "background": "#11131c",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "surface-bright": "#373943",
+                        "primary": "#c2c1ff",
+                        "on-tertiary-container": "#f8deff",
+                        "on-tertiary-fixed-variant": "#7201a2",
+                        "primary-fixed-dim": "#c2c1ff",
+                        "surface-container-high": "#282933",
+                        "on-secondary-fixed-variant": "#004493",
+                        "outline-variant": "#464554",
+                        "on-secondary": "#002e69",
+                        "on-tertiary-fixed": "#310048",
+                        "surface-container": "#1d1f29",
+                        "inverse-surface": "#e1e1ef",
+                        "tertiary": "#e8b3ff",
+                        "error-container": "#93000a",
+                        "inverse-primary": "#4f4ccd",
+                        "tertiary-fixed-dim": "#e8b3ff",
+                        "on-primary-container": "#e7e4ff",
+                        "on-primary": "#1c0b9f",
+                        "surface-container-lowest": "#0c0e17",
+                        "inverse-on-surface": "#2e303a",
+                        "on-surface": "#e1e1ef",
+                        "tertiary-fixed": "#f6d9ff",
+                        "surface-tint": "#c2c1ff",
+                        "tertiary-container": "#9739c6",
+                        "secondary-fixed": "#d8e2ff",
+                        "secondary": "#adc6ff",
+                        "on-background": "#e1e1ef",
+                        "on-primary-fixed": "#0c006a",
+                        "surface-variant": "#32343e",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#4b8eff",
+                        "on-tertiary": "#510074",
+                        "on-surface-variant": "#c7c4d6",
+                        "primary-fixed": "#e2dfff",
+                        "surface-container-low": "#191b24",
+                        "on-secondary-container": "#00285c",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "outline": "#918f9f",
+                        "surface-dim": "#11131c",
+                        "primary-container": "#5856d6",
+                        "surface-container-highest": "#32343e",
+                        "surface": "#11131c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "margin-desktop": "40px",
+                        "unit": "8px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Geist"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg-mobile": ["Geist"],
+                        "headline-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="hidden md:flex flex-col h-screen w-72 bg-surface-container-lowest/80 backdrop-blur-2xl border-r border-white/10 p-gutter gap-unit z-40 fixed left-0">
+<div class="mb-8 px-2">
+<h1 class="font-display-lg text-headline-md font-bold text-primary">Vocalize AI</h1>
+<div class="flex items-center gap-2 mt-2">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A stylized minimalist 3D avatar of a professional user with clean facial features and modern attire, rendered in a soft studio lighting against a dark deep violet background to match a high-end AI software aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfbJ8LeaFEEnTPPi-OmONqb-oh6zVeJo5DoNqttxX-BGq-IJjOwkhR4wWNzuOPct_6EzhkqVjNHHcA-qjy2z5GP2z8P1x3y1w_JgZRAA8MGIPqcnEyGqgU33HVi9KgDMHWMy7wOOX72yN0RABED4O_PiTfjaTwSNtUvR1lc6aDUm3MztMp4A3FvBt1bnTrGiSdzo1tJyAr2aGNs3hOG7ePbrUrwmDnNtYVnVwB9Z17D4WrxLC4cd6KSgEOZQQZTU4nbFyuASORqg"/>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Alex Rivera</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Pro Plan</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-body-md text-body-md">New Session</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body-md text-body-md">History</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-semibold shadow-[0_0_15px_rgba(88,86,214,0.3)] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">neurology</span>
+<span class="font-body-md text-body-md">Models</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">vpn_key</span>
+<span class="font-body-md text-body-md">API Keys</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto space-y-4">
+<div class="p-4 bg-white/5 rounded-xl border border-white/10 text-center">
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Power user?</p>
+<button class="w-full py-2 bg-gradient-to-r from-primary to-tertiary text-on-primary font-bold rounded-lg active:scale-95 transition-transform duration-200">Upgrade to Ultra</button>
+</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-sm text-label-sm">Help</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-sm text-label-sm">Sign Out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-72 min-h-screen flex flex-col relative overflow-hidden">
+<!-- Subtle Ambient Background Blobs -->
+<div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="absolute bottom-[-5%] left-[-5%] w-[400px] h-[400px] bg-tertiary/10 blur-[100px] rounded-full pointer-events-none"></div>
+<header class="h-20 px-margin-desktop flex items-center justify-between border-b border-white/5 bg-surface/10 backdrop-blur-xl sticky top-0 z-30">
+<div>
+<h2 class="font-display-lg text-headline-md font-bold text-on-surface">Model Selection</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Switch between cutting-edge LLMs optimized for vocal synthesis.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="px-3 py-1 bg-surface-container-high rounded-full border border-white/10 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Systems Nominal</span>
+</div>
+</div>
+</header>
+<section class="p-margin-desktop max-w-container-max mx-auto w-full relative">
+<!-- Bento Grid of Models -->
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Active Model: GPT-4o -->
+<div class="glass-card active-model-card relative overflow-hidden p-8 rounded-2xl flex flex-col gap-6 group">
+<div class="scanning-line"></div>
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-xl bg-white/10 p-2 flex items-center justify-center">
+<img alt="Provider" class="w-full h-full opacity-90" data-alt="A sophisticated minimalist abstract geometric icon representing a technology provider, designed with clean white lines on a dark translucent glass tile, featuring soft glowing edges consistent with an ultra-modern AI application interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBtLLIJjUJAE1d23o1t1lT3izldIbbEvsKTDa0cSnImpujnd4KyRiJDJWPpwl9B3tBJ_mCNfXrGvaEcaukayLG5kBrrpGxXCk8B19Zr9CaVD-xDnXLKCwVkYTb1XOUhAroMVKIGMg_L98az0OR3TzQh_N_aoKSZJzverAGaBl-9FBNRQqX03NMdxUsEI1YWBI2hm2asvf0oXVUfFaq6Yfcw-_cltToAUlsmPcrYpvEDM0QgYr-cm4EHpoLyXrZxq0zghwkp0UfYA"/>
+</div>
+<div class="px-3 py-1 bg-primary text-on-primary rounded-full font-label-sm text-label-sm font-bold">ACTIVE</div>
+</div>
+<div>
+<h3 class="font-display-lg text-headline-md text-primary mb-2">GPT-4o</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Omni-model optimized for real-time conversational reasoning and ultra-low latency audio processing.</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Latency: <span class="text-emerald-400">120ms</span></span>
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Accuracy: <span class="text-primary">98.4%</span></span>
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Context: <span class="text-on-surface">128k</span></span>
+</div>
+<button class="mt-auto w-full py-3 bg-white/10 text-on-surface font-semibold rounded-xl border border-white/20 cursor-default">Current Selection</button>
+</div>
+<!-- Model: Claude 3.5 Sonnet -->
+<div class="glass-card relative overflow-hidden p-8 rounded-2xl flex flex-col gap-6 group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-xl bg-white/10 p-2 flex items-center justify-center">
+<img alt="Provider" class="w-full h-full opacity-90" data-alt="An elegant and minimalist corporate tech logo with organic curved shapes, rendered in a crisp white finish on a semi-transparent dark pane, evoking high-performance computing and advanced artificial intelligence design standards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCFS8twEHtmxzgubBKZ9FJMkcB0M5KZPWrH_vz0bg1q3MLuyNz4Jd-uzjNoZ5yfx73QsK7uHa6-3JTm0KtSrX9JxrEmhI-W6I5FLs7dmV3h1Ompd219aGGC5jJT3j43wPTqJyYjzs2eydBreWNsf4Rk_t_6H3Rjv3U7JPvTAwGm69GzeACn6WoG_6148Ecrr033wVR-SQuno3u2A-MtXYA4qJedOCyyocnEoT4qVY8nExNMz3GPzZDXxkBM__1OUh5jiMkrEPGLA"/>
+</div>
+<div class="px-3 py-1 bg-white/5 text-on-surface-variant border border-white/10 rounded-full font-label-sm text-label-sm">RECOMMENDED</div>
+</div>
+<div>
+<h3 class="font-display-lg text-headline-md text-on-surface mb-2">Claude 3.5 Sonnet</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Highly nuanced linguistic output, ideal for complex creative writing and empathetic character voices.</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Latency: <span class="text-on-surface">240ms</span></span>
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Accuracy: <span class="text-primary">99.1%</span></span>
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Context: <span class="text-on-surface">200k</span></span>
+</div>
+<button class="mt-auto w-full py-3 bg-primary-container/20 hover:bg-primary-container text-on-primary-container font-semibold rounded-xl border border-primary/20 hover:border-primary transition-all duration-300 active:scale-95">Switch to Claude</button>
+</div>
+<!-- Model: Gemini 1.5 Pro -->
+<div class="glass-card relative overflow-hidden p-8 rounded-2xl flex flex-col gap-6 group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-xl bg-white/10 p-2 flex items-center justify-center">
+<img alt="Provider" class="w-full h-full opacity-90" data-alt="A modern tech brand mark featuring interlocking futuristic shapes, presented in high-contrast white on a deep indigo translucent background, symbolizing global connectivity and massive scale data processing in an AI ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp61KcDKX3QhiA3Lmz97-lUDmLo1-YkDFsZePb5apn-sgYSU0QFmO0UYxkr863Wdb_ihMZ89XuMcpdtQRZvM36yXO0QYSNIr-KTPc8OzHYKiD4tQvtws7T-vWBMbkK2tq3qmxQ5PXchr9KYrYXzB6sHOD7pGGhXcODWP4N-FHF3zfCv-44l7V_thMrYp8XwiBxVm5LR_71eOSkyxsrbGMACiVIhZ-CM83y0ZdcOkVdkHXqZt2_W2073LiQyhQb3dJq9HMxkcPQwA"/>
+</div>
+</div>
+<div>
+<h3 class="font-display-lg text-headline-md text-on-surface mb-2">Gemini 1.5 Pro</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Massive context window support for analyzing hour-long transcripts and multi-modal audio files.</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Latency: <span class="text-on-surface">310ms</span></span>
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Accuracy: <span class="text-primary">97.2%</span></span>
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Context: <span class="text-emerald-400">1M+</span></span>
+</div>
+<button class="mt-auto w-full py-3 bg-primary-container/20 hover:bg-primary-container text-on-primary-container font-semibold rounded-xl border border-primary/20 hover:border-primary transition-all duration-300 active:scale-95">Switch to Gemini</button>
+</div>
+<!-- Model: Llama 3 70B (Local) -->
+<div class="glass-card relative overflow-hidden p-8 rounded-2xl flex flex-col gap-6 group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-xl bg-white/10 p-2 flex items-center justify-center">
+<img alt="Provider" class="w-full h-full opacity-90" data-alt="A sleek digital emblem of a major tech enterprise, styled with clean white lines on a dark, layered glass background that reflects a deep indigo and violet light palette, creating a sense of premium architectural technology design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTvWOoKBJvIy2hsJrjN6uOx-Rp5IJU2fk8gNMtK4Px9vFobcO0U7jSHnX4g7yqODWtG32rbWO7_DRgUoOKlbIYMTZb84LewGFI7oOMCAO1fElzGhq2RFY5T3TuHP8oq6de2GdS9kLpeZqb5AahPa9sYseADbzyeD_TU23kQDTRhsGhFmSJhRCcYtQvArRoO1eQrlfABtl3XPkhnxzQGPYA62HctnBBB_jzzoHLvWn0e3iEAtuaYvOAoFiDeagUYCJi58AwnefuUw"/>
+</div>
+<div class="px-3 py-1 bg-tertiary-container/30 text-tertiary border border-tertiary/20 rounded-full font-label-sm text-label-sm">OPEN SOURCE</div>
+</div>
+<div>
+<h3 class="font-display-lg text-headline-md text-on-surface mb-2">Llama 3 70B</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">High-performance open weights model. Excellent for standard tasks with zero data retention policies.</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Latency: <span class="text-on-surface">180ms</span></span>
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Accuracy: <span class="text-primary">96.5%</span></span>
+<span class="px-2 py-1 bg-white/5 border border-white/10 rounded font-label-sm text-label-sm text-on-surface-variant">Context: <span class="text-on-surface">8k</span></span>
+</div>
+<button class="mt-auto w-full py-3 bg-primary-container/20 hover:bg-primary-container text-on-primary-container font-semibold rounded-xl border border-primary/20 hover:border-primary transition-all duration-300 active:scale-95">Switch to Llama</button>
+</div>
+<!-- Custom Integration Card -->
+<div class="glass-card border-dashed border-white/20 bg-transparent flex flex-col items-center justify-center text-center p-8 rounded-2xl gap-4 group cursor-pointer hover:bg-white/5">
+<div class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary">add</span>
+</div>
+<div>
+<h3 class="font-display-lg text-headline-md text-on-surface mb-2">Custom Endpoint</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Connect your own hosted fine-tuned model via secure REST API.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Anchor -->
+<footer class="mt-auto w-full py-12 border-t border-white/5 bg-surface-container-lowest">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop max-w-container-max mx-auto gap-6">
+<div class="flex flex-col gap-2 text-center md:text-left">
+<h4 class="font-display-lg text-headline-md text-primary">Vocalize AI</h4>
+<p class="font-label-sm text-label-sm text-tertiary">© 2024 Vocalize AI. Ambient Intelligence for Everyone.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Status</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">GitHub</a>
+</div>
+</div>
+</footer>
+</main>
+<!-- Mobile Navigation (BottomNavBar) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-surface-container-lowest/90 backdrop-blur-xl flex items-center justify-around px-4 z-50 shadow-2xl">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-[10px] font-medium">New</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-medium">History</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">neurology</span>
+<span class="text-[10px] font-bold">Models</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">vpn_key</span>
+<span class="text-[10px] font-medium">API</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</nav>
+<script>
+        // Simple Interaction logic for card selection
+        const buttons = document.querySelectorAll('button:not(.bg-white\\/10)');
+        buttons.forEach(btn => {
+            if (btn.innerText.includes('Switch to')) {
+                btn.addEventListener('click', () => {
+                    const modelName = btn.parentElement.querySelector('h3').innerText;
+                    // Mock success state
+                    btn.innerHTML = 'Activating...';
+                    btn.classList.add('animate-pulse');
+                    setTimeout(() => {
+                        alert(`${modelName} is now active.`);
+                        btn.innerHTML = `Switch to ${modelName.split(' ')[0]}`;
+                        btn.classList.remove('animate-pulse');
+                    }, 1500);
+                });
+            }
+        });
+
+        // Add a subtle parallax effect to ambient blobs
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            document.querySelectorAll('.blur-full').forEach(blob => {
+                blob.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+    </script>
+</body></html>

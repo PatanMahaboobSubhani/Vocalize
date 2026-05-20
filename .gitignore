@@ -1,0 +1,26 @@
+# Dependencies
+myapp/node_modules/
+node_modules/
+
+# Production Build
+myapp/build/
+build/
+
+# Local Environment Variables
+myapp/.env
+myapp/.env.local
+myapp/.env.development.local
+myapp/.env.test.local
+myapp/.env.production.local
+.env
+.env.local
+
+# IDE/System Files
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

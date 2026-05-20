@@ -1,0 +1,32 @@
+.sessions-wrapper {
+    background-color: #11131c;
+    color: #e1e1ef;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(194, 193, 255, 0.3);
+    box-shadow: 0 0 30px rgba(194, 193, 255, 0.05);
+}
+.text-gradient {
+    background: linear-gradient(to right, #c2c1ff, #e8b3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.primary-gradient {
+    background: linear-gradient(135deg, #5856d6 0%, #af52de 100%);
+}
+.scrolling-hide::-webkit-scrollbar {
+    display: none;
+}
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

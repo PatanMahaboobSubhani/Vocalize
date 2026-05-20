@@ -1,0 +1,34 @@
+.login-wrapper {
+    background-color: var(--background, #11131c);
+    color: var(--on-background, #e1e1ef);
+}
+.glass-panel {
+    background: var(--surface-container-low, #191b24);
+    border: 1px solid var(--outline-variant, #464554);
+}
+.glass-input {
+    background: var(--surface-container, #1d1f29);
+    border: 1px solid var(--outline-variant, #464554);
+    transition: all 0.3s ease;
+}
+.glass-input:focus {
+    outline: none;
+    border-color: var(--primary, #c2c1ff);
+    box-shadow: 0 0 0 1px var(--primary, #c2c1ff);
+}
+.glow-btn-primary {
+    background: linear-gradient(135deg, var(--primary-container, #5856d6), var(--tertiary-container, #9739c6));
+    transition: all 0.3s ease;
+}
+.glow-btn-primary:hover {
+    box-shadow: 0 0 20px rgba(88, 86, 214, 0.4);
+    transform: translateY(-1px);
+}
+.ambient-light {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.3;
+    z-index: 0;
+    pointer-events: none;
+}
