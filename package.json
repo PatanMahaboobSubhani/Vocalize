@@ -1,9 +1,4 @@
 {
-  "homepage": "https://github.com/PatanMahaboobSubhani/Vocalize.git",
-  "devDependencies": {
-    "gh-pages": "^6.3.0"
-  },
-  
   "name": "myapp",
   "version": "0.1.0",
   "private": true,
@@ -46,7 +41,4 @@
       "last 1 safari version"
     ]
   }
-
-
 }
-
